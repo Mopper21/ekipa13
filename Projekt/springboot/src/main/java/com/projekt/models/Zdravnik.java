@@ -1,10 +1,10 @@
 package com.projekt.models;
 
 import jakarta.persistence.*;
-import java.util.*;
+import java.util.Collection;
 
 @Entity
-public class Pacient {
+public class Zdravnik {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,12 +12,12 @@ public class Pacient {
 
     private String ime;
     private String priimek;
-    private Date datumRojstva;
-    private String naslov;
-    private int telSt;
+    private String specializacija;
+    private int telefon;
     private String email;
+    private String zdravnikcol;
 
-    @OneToMany(mappedBy = "pacient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "zdravnik", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Napotnice> napotnice;
 
     public Long getId() {
@@ -44,28 +44,20 @@ public class Pacient {
         this.priimek = priimek;
     }
 
-    public Date getDatumRojstva() {
-        return datumRojstva;
+    public String getSpecializacija() {
+        return specializacija;
     }
 
-    public void setDatumRojstva(Date datumRojstva) {
-        this.datumRojstva = datumRojstva;
+    public void setSpecializacija(String specializacija) {
+        this.specializacija = specializacija;
     }
 
-    public String getNaslov() {
-        return naslov;
+    public int getTelefon() {
+        return telefon;
     }
 
-    public void setNaslov(String naslov) {
-        this.naslov = naslov;
-    }
-
-    public int getTelSt() {
-        return telSt;
-    }
-
-    public void setTelSt(int telSt) {
-        this.telSt = telSt;
+    public void setTelefon(int telefon) {
+        this.telefon = telefon;
     }
 
     public String getEmail() {
@@ -74,6 +66,14 @@ public class Pacient {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getZdravnikcol() {
+        return zdravnikcol;
+    }
+
+    public void setZdravnikcol(String zdravnikcol) {
+        this.zdravnikcol = zdravnikcol;
     }
 
     public Collection<Napotnice> getNapotnice() {

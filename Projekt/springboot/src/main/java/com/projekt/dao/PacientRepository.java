@@ -6,7 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface PacientRepository extends CrudRepository<Hisa, Long> {
-    @Query("select h from Hisa h, Soba s where s.hisa = h and s.velikost >= ?1")
-    List<Hisa> vrniHisePoVelikostiSob(double velikost);
+public interface PacientRepository extends CrudRepository<Pacient, Long> {
+
+    @Query("SELECT p FROM Pacient p WHERE p.email = ?1")
+    Pacient findByEmail(String email);
+
+    @Query("SELECT p FROM Pacient p WHERE p.ime LIKE %?1% OR p.priimek LIKE %?1%")
+    List<Pacient> searchByName(String name);
 }
