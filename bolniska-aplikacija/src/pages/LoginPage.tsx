@@ -1,17 +1,21 @@
 import React, { useState, FormEvent } from 'react';
+import { loginUser } from '../services/api';
 import { useAuth } from '../AuthContext';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const [uporabniskoIme, setUporabniskoIme] = useState('');
+  const [geslo, setGeslo] = useState('');
+  const { setCurrentUser } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const user = { uporabniskoIme, geslo };
     try {
-      await login(email, password);
+      const response = await loginUser(user);
+      setCurrentUser(response.data);
+      // Redirect to home or other page
     } catch (error) {
-      console.error('Failed to login', error);
+      console.error('Napaka pri prijavi:', error);
     }
   };
 
@@ -20,12 +24,12 @@ const LoginPage: React.FC = () => {
       <h1>Prijava</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label>Uporabniško ime</label>
+          <input type="text" value={uporabniskoIme} onChange={(e) => setUporabniskoIme(e.target.value)} />
         </div>
         <div>
           <label>Geslo</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input type="password" value={geslo} onChange={(e) => setGeslo(e.target.value)} />
         </div>
         <button type="submit">Prijava</button>
       </form>

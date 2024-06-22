@@ -57,4 +57,9 @@ public class TerminController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/search")
+    public List<Termin> getTerminiByZdravnikAndPacient(@RequestParam Long zdravnikId, @RequestParam Long pacientId) {
+        return terminRepository.findTerminiByZdravnikAndPacient(zdravnikId, pacientId);
+    }
 }

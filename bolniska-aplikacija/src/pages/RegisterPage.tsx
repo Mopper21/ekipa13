@@ -1,17 +1,19 @@
 import React, { useState, FormEvent } from 'react';
-import { useAuth } from '../AuthContext';
+import { registerUser } from '../services/api';
 
 const RegisterPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { register } = useAuth();
+  const [uporabniskoIme, setUporabniskoIme] = useState('');
+  const [geslo, setGeslo] = useState('');
+  const [vloga, setVloga] = useState('ROLE_USER');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const user = { uporabniskoIme, geslo, vloga };
     try {
-      await register(email, password);
+      const response = await registerUser(user);
+      console.log('Registracija uspešna:', response.data);
     } catch (error) {
-      console.error('Failed to register', error);
+      console.error('Napaka pri registraciji:', error);
     }
   };
 
@@ -20,12 +22,12 @@ const RegisterPage: React.FC = () => {
       <h1>Registracija</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label>Uporabniško ime</label>
+          <input type="text" value={uporabniskoIme} onChange={(e) => setUporabniskoIme(e.target.value)} />
         </div>
         <div>
           <label>Geslo</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input type="password" value={geslo} onChange={(e) => setGeslo(e.target.value)} />
         </div>
         <button type="submit">Registracija</button>
       </form>
