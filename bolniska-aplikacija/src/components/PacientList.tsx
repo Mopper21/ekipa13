@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPacienti } from '../services/api';
-import './PacientList.css';
 
 interface Pacient {
   id: number;

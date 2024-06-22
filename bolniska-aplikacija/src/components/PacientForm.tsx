@@ -1,6 +1,5 @@
 import React, { useState, FormEvent } from 'react';
 import { createPacient } from '../services/api';
-import './PacientForm.css';
 
 interface PacientFormProps {
   onPacientAdded: () => void;

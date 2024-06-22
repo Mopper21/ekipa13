@@ -7,7 +7,6 @@ import PacientListPage from './pages/PacientListPage';
 import TerminListPage from './pages/TerminListPage';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthProvider, useAuth } from './AuthContext';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const NavBar: React.FC = () => {
   const { currentUser } = useAuth();
