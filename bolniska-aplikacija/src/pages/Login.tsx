@@ -1,3 +1,4 @@
+// src/pages/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -22,8 +23,12 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(credentials);
-      navigate('/');
+      const user = await login(credentials); // Get user data from login
+      if (user.vloga === 'DOCTOR') {
+        navigate('/doctor');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       setError('Incorrect username or password');
     }

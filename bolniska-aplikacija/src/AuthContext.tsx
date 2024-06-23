@@ -1,12 +1,11 @@
-// src/AuthContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axiosInstance from './services/api';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   currentUser: any;
   register: (userData: any) => Promise<void>;
-  login: (userData: any) => Promise<void>;
+  login: (userData: any) => Promise<any>;
   logout: () => void;
 }
 
@@ -17,30 +16,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   const register = async (userData: any) => {
-    try {
-      const response = await axiosInstance.post('/auth/register', userData);
-      setCurrentUser(response.data);
-      navigate('/login'); // Preusmeravanje na login stranicu nakon uspešne registracije
-    } catch (error) {
-      console.error('Registration error', error);
-      throw error;
-    }
+    const response = await axiosInstance.post('/auth/register', userData);
+    setCurrentUser(response.data);
   };
 
-  const login = async (userData: any) => {
+  const login = async (userData: any): Promise<any> => {
     try {
       const response = await axiosInstance.post('/auth/login', userData);
       setCurrentUser(response.data);
-      navigate('/'); // Preusmeravanje na glavnu stranicu nakon uspešnog logina
+      localStorage.setItem('token', response.data.token); // Save token to localStorage
+      return response.data;
     } catch (error) {
-      console.error('Login error', error);
+      console.error('Login error:', error);
       throw error;
     }
   };
 
   const logout = () => {
     setCurrentUser(null);
-    navigate('/login'); // Preusmeravanje na login stranicu nakon logouta
+    localStorage.removeItem('token'); // Remove token from localStorage
+    navigate('/login');
   };
 
   return (

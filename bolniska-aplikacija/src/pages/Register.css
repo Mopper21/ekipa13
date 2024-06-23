@@ -31,3 +31,30 @@
     background-color: #0056b3;
   }
   
+  .vloga {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .vloga option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .vloga:hover {
+    border-color: #007bff;
+  }
+  
+  .vloga:focus {
+    border-color: #007bff;
+    outline: none;
+  }

@@ -1,19 +1,21 @@
+// src/pages/Register.tsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import './Register.css';
 
 const Register: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [userData, setUserData] = useState({
     uporabniskoIme: '',
-    geslo: ''
+    geslo: '',
+    vloga: 'USER' 
   });
   const { register } = useAuth();
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setUserData({
+      ...userData,
       [e.target.name]: e.target.value
     });
   };
@@ -21,19 +23,23 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register(formData);
+      await register(userData);
+      navigate('/login');
     } catch (error) {
-      setError('Registration failed');
+      console.error('Registration error', error);
     }
   };
 
   return (
     <div className="register-container">
       <h2>Register</h2>
-      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit} className="register-form">
         <input type="text" name="uporabniskoIme" placeholder="Uporabnisko Ime" onChange={handleChange} />
         <input type="password" name="geslo" placeholder="Geslo" onChange={handleChange} />
+        <select className="vloga" name="vloga" onChange={handleChange} value={userData.vloga}>
+          <option value="USER">User</option>
+          <option value="DOCTOR">Doctor</option>
+        </select>
         <button type="submit">Register</button>
       </form>
       <div className="login-link">

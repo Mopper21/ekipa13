@@ -5,8 +5,10 @@ import LandingPage from './pages/LandingPage';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import DoctorPage from './pages/DoctorPage';
 import { AuthProvider } from './AuthContext';
 import Footer from './components/Footer';
+import ManageAppointments from './pages/ManageAppointments';
 import './App.css';
 
 const App: React.FC = () => {
@@ -20,6 +22,9 @@ const App: React.FC = () => {
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/doctor" element={<DoctorPage />} />
+              <Route path="/manage-appointments" element={<ManageAppointments />} />
+
             </Routes>
           </div>
           <Footer />

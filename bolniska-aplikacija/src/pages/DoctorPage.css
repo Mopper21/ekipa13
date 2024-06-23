@@ -1,0 +1,107 @@
+/* src/pages/DoctorPage.css */
+.doctor-page {
+    font-family: Arial, sans-serif;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e7e7e7;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  nav {
+    display: flex;
+    gap: 20px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  nav a:hover {
+    text-decoration: underline;
+  }
+  
+  .logout-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .main-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    background-color: #f8f9fa;
+  }
+  
+  .text-content {
+    max-width: 600px;
+  }
+  
+  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .manage-appointments {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .manage-appointments:hover {
+    background-color: #0056b3;
+  }
+  
+  .image-content img {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  
+  .extra-info {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px;
+    background-color: #f1f1f1;
+  }
+  
+  .info-block {
+    max-width: 300px;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 16px;
+  }
+  
