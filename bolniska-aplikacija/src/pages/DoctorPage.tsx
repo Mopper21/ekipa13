@@ -26,7 +26,7 @@ const DoctorPage: React.FC = () => {
         <div className="main-content">
           <div className="text-content">
             <h1>Welcome, Dr. {currentUser.uporabniskoIme}</h1>
-            <p>Manage your appointments and view patient details.</p>
+            <p>Manage your appointments.</p>
             <button className="manage-appointments">
               <Link to="/manage-appointments">Manage Appointments</Link>
             </button>          </div>

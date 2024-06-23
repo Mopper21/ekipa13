@@ -4,17 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.ris.models.Termin;
+import si.um.feri.ris.models.Zdravnik;
 import si.um.feri.ris.repositories.TerminRepository;
+import si.um.feri.ris.repositories.ZdravnikRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/termini")
+@RequestMapping("/api/termin")
 public class TerminController {
 
     @Autowired
     private TerminRepository terminRepository;
+
+    @Autowired
+    private ZdravnikRepository zdravnikRepository;
 
     @GetMapping
     public List<Termin> getAllTermini() {
@@ -28,8 +33,15 @@ public class TerminController {
     }
 
     @PostMapping
-    public Termin createTermin(@RequestBody Termin termin) {
-        return terminRepository.save(termin);
+    public ResponseEntity<Termin> createTermin(@RequestBody Termin termin) {
+        Optional<Zdravnik> zdravnik = zdravnikRepository.findById(termin.getZdravnik().getId());
+        if (zdravnik.isPresent()) {
+            termin.setZdravnik(zdravnik.get());
+            Termin savedTermin = terminRepository.save(termin);
+            return ResponseEntity.ok(savedTermin);
+        } else {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 
     @PutMapping("/{id}")
@@ -56,10 +68,5 @@ public class TerminController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping("/search")
-    public List<Termin> getTerminiByZdravnikAndPacient(@RequestParam Long zdravnikId, @RequestParam Long pacientId) {
-        return terminRepository.findTerminiByZdravnikAndPacient(zdravnikId, pacientId);
     }
 }

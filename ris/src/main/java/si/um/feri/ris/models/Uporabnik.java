@@ -11,6 +11,15 @@ public class Uporabnik {
     private String geslo;
     private String vloga;
 
+    @Transient
+    private String token;
+
+    @OneToOne(mappedBy = "uporabnik")
+    private Zdravnik zdravnik;
+
+    @OneToOne(mappedBy = "uporabnik")
+    private Pacient pacient;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -42,5 +51,29 @@ public class Uporabnik {
 
     public void setVloga(String vloga) {
         this.vloga = vloga;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Zdravnik getZdravnik() {
+        return zdravnik;
+    }
+
+    public void setZdravnik(Zdravnik zdravnik) {
+        this.zdravnik = zdravnik;
+    }
+
+    public Pacient getPacient() {
+        return pacient;
+    }
+
+    public void setPacient(Pacient pacient) {
+        this.pacient = pacient;
     }
 }

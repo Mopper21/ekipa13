@@ -34,7 +34,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/zdravniki/**").permitAll() // Allow public access to /api/zdravniki/**
+                        .requestMatchers("/api/zdravniki/**").permitAll()
+                        .requestMatchers("/api/pacienti/**").permitAll()
+                        .requestMatchers("/api/termin/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());

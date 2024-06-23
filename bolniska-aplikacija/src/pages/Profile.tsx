@@ -11,6 +11,8 @@ const Profile: React.FC = () => {
   useEffect(() => {
     if (!currentUser) {
       navigate('/login');
+    } else {
+      console.log(currentUser); // Dodajte ovaj redak
     }
   }, [currentUser, navigate]);
 

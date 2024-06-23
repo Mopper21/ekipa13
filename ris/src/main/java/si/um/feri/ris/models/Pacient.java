@@ -33,6 +33,10 @@ public class Pacient {
     @Column(name = "ZZZS")
     private String zzzs;
 
+    @OneToOne
+    @JoinColumn(name = "uporabnik_id")
+    private Uporabnik uporabnik;
+
     // Getters and Setters
     public Long getId() {
         return id;

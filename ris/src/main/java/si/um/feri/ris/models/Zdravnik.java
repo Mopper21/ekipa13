@@ -25,6 +25,10 @@ public class Zdravnik {
     @Column(name = "Email")
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "uporabnik_id")
+    private Uporabnik uporabnik;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -72,5 +76,13 @@ public class Zdravnik {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Uporabnik getUporabnik() {
+        return uporabnik;
+    }
+
+    public void setUporabnik(Uporabnik uporabnik) {
+        this.uporabnik = uporabnik;
     }
 }

@@ -1,15 +1,22 @@
-// src/pages/ManageAppointments.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import axiosInstance from '../services/api';
 import './ManageAppointments.css';
 
 const ManageAppointments: React.FC = () => {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [appointment, setAppointment] = useState({
     datum: '',
     status: 'Available'
   });
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setAppointment({
@@ -20,10 +27,15 @@ const ManageAppointments: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentUser || !currentUser.id) {
+      alert('User not logged in');
+      return;
+    }
+
     try {
       await axiosInstance.post('/termin', {
         ...appointment,
-        zdravnik_id: currentUser.id // Ensure this matches your backend field
+        zdravnik: { id: currentUser.id } // Ensure this matches your backend field
       });
       alert('Appointment slot saved successfully');
     } catch (error) {
