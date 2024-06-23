@@ -1,49 +1,55 @@
+// src/pages/LandingPage.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 import './LandingPage.css';
 
 const LandingPage: React.FC = () => {
+  const { currentUser, logout } = useAuth();
+
   return (
     <div className="landing-page">
-      <header className="header">
+      <header>
         <div className="logo">Health+</div>
         <nav>
           <Link to="/">Home</Link>
+          <Link to="/services">Services</Link>
           <Link to="/about">About</Link>
           <Link to="/doctors">Doctors</Link>
-          <Link to="/login">Login</Link>
-
+          {currentUser ? (
+            <>
+              <Link to="/profile">Profile</Link>
+              <button className="logout-button" onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <Link to="/login">Login</Link>
+          )}
         </nav>
       </header>
-
-      <section className="hero-section">
-        <div className="hero-text">
-          <h1>Find your Doctor and make an Appointment</h1>
-          <p>
-            Talk to online doctors and get medical advice, online prescriptions,
-            refills and medical notes within minutes. On-demand healthcare services at your fingertips.
-          </p>
-          <button className="appointment-button">Book Appointment</button>
+      <main>
+        <div className="main-content">
+          <div className="text-content">
+            <h1>Find your Doctor and make an Appointments</h1>
+            <p>
+              Talk to online doctors and get medical advice, online prescriptions, refills and medical notes within minutes. On-demand healthcare services at your fingertips.
+            </p>
+            <button className="book-appointment">Book Appointment</button>
+          </div>
+          <div className="image-content">
+            <img src="../slika1.jpg" alt="Healthcare" />
+          </div>
         </div>
-        <div className="hero-image">
-          <img src="path/to/your/doctor-image.png" alt="Doctor" />
-        </div>
-      </section>
-
-      <section className="stats-section">
-        <div className="stat">
-          <h2>145k+</h2>
-          <p>Receive Patients</p>
-        </div>
-        <div className="stat">
-          <h2>50+</h2>
-          <p>Expert Doctors</p>
-        </div>
-        <div className="stat">
-          <h2>10+</h2>
-          <p>Years of Experience</p>
-        </div>
-      </section>
+        <section className="extra-info">
+          <div className="info-block">
+            <h2>Our Services</h2>
+            <p>We offer a wide range of healthcare services to meet your needs.</p>
+          </div>
+          <div className="info-block">
+            <h2>Why Choose Us</h2>
+            <p>With over 50 expert doctors and 145k+ patients, we provide the best healthcare services.</p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 };

@@ -1,7 +1,6 @@
-// src/pages/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axiosInstance from '../services/api';  // Ažurirano importovanje
+import { useAuth } from '../AuthContext';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -9,7 +8,8 @@ const Login: React.FC = () => {
     uporabniskoIme: '',
     geslo: ''
   });
-
+  const [error, setError] = useState('');
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,16 +22,17 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axiosInstance.post('/auth/login', credentials);
-      navigate('/'); // Preusmeravanje na glavnu stranicu nakon uspešnog logina
+      await login(credentials);
+      navigate('/');
     } catch (error) {
-      console.error('Login error', error);
+      setError('Incorrect username or password');
     }
   };
 
   return (
     <div className="login-container">
       <h2>Login</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit} className="login-form">
         <input type="text" name="uporabniskoIme" placeholder="Uporabnisko Ime" onChange={handleChange} />
         <input type="password" name="geslo" placeholder="Geslo" onChange={handleChange} />

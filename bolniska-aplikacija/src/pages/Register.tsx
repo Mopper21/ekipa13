@@ -1,17 +1,15 @@
-// src/pages/Register.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../services/api';  // Importovanje axios instance
+import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 import './Register.css';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
     uporabniskoIme: '',
-    geslo: '',
-    vloga: 'USER'
+    geslo: ''
   });
-
-  const navigate = useNavigate();
+  const { register } = useAuth();
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -23,21 +21,24 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axiosInstance.post('/auth/register', formData);
-      navigate('/login'); // Preusmeravanje na login stranicu nakon uspešne registracije
+      await register(formData);
     } catch (error) {
-      console.error('Registration error', error);
+      setError('Registration failed');
     }
   };
 
   return (
     <div className="register-container">
       <h2>Register</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit} className="register-form">
         <input type="text" name="uporabniskoIme" placeholder="Uporabnisko Ime" onChange={handleChange} />
         <input type="password" name="geslo" placeholder="Geslo" onChange={handleChange} />
         <button type="submit">Register</button>
       </form>
+      <div className="login-link">
+        Already have an account? <Link to="/login">Login here</Link>
+      </div>
     </div>
   );
 };

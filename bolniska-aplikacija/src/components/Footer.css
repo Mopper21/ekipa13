@@ -1,9 +1,11 @@
 /* src/components/Footer.css */
 .footer {
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     padding: 20px 0;
     text-align: center;
-    border-top: 1px solid #e7e7e7;
+    border-top: 1px solid #abc6de;
+    color: rgb(0, 0, 0);
+    font-size: 14px;
   }
   
   .footer-content {
@@ -26,10 +28,28 @@
   
   .footer-links a {
     text-decoration: none;
-    color: #007bff;
+    color: #0793ff;
   }
   
   .footer-links a:hover {
+    color: #fff;
     text-decoration: underline;
   }
-  
+
+
+
+  .footer-logo {
+    font-size: 18px;
+    font-weight: bold;
+    color:#0793ff
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column;
+      text-align: center;
+    }
+    .footer-links, .footer-socials {
+      margin-top: 10px;
+    }
+  }
