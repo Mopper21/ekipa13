@@ -1,46 +1,45 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+// src/AuthContext.tsx
+import React, { createContext, useState, useContext, ReactNode } from 'react';
+import axiosInstance from './services/api';
+
 
 interface AuthContextType {
-  currentUser: any;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    currentUser: any;
+    register: (userData: any) => Promise<void>;
+    login: (userData: any) => Promise<void>;
+    logout: () => void;
   }
-  return context;
-};
-
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<any>(null);
-
-  useEffect(() => {
-    // Initialize the user if already logged in
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    // Implement login logic
-    setCurrentUser({ email });
+  
+  const AuthContext = createContext<AuthContextType | undefined>(undefined);
+  
+  export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const [currentUser, setCurrentUser] = useState<any>(null);
+  
+    const register = async (userData: any) => {
+      const response = await axiosInstance.post('/auth/register', userData);
+      setCurrentUser(response.data);
+    };
+  
+    const login = async (userData: any) => {
+      const response = await axiosInstance.post('/auth/login', userData);
+      setCurrentUser(response.data);
+    };
+  
+    const logout = () => {
+      setCurrentUser(null);
+    };
+  
+    return (
+      <AuthContext.Provider value={{ currentUser, register, login, logout }}>
+        {children}
+      </AuthContext.Provider>
+    );
   };
-
-  const register = async (email: string, password: string) => {
-    // Implement register logic
-    setCurrentUser({ email });
+  
+  export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+      throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
   };
-
-  const logout = () => {
-    setCurrentUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ currentUser, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
