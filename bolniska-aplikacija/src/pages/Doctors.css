@@ -1,0 +1,28 @@
+/* src/pages/Doctors.css */
+.doctors-container {
+    padding: 20px;
+  }
+  
+  .doctors-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .doctor-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    width: calc(33% - 20px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .doctor-card h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  
+  .doctor-card p {
+    margin: 4px 0;
+  }
+  

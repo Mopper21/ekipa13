@@ -9,6 +9,7 @@ import DoctorPage from './pages/DoctorPage';
 import { AuthProvider } from './AuthContext';
 import Footer from './components/Footer';
 import ManageAppointments from './pages/ManageAppointments';
+import Doctors from './pages/Doctors';
 import './App.css';
 
 const App: React.FC = () => {
@@ -24,6 +25,8 @@ const App: React.FC = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/doctor" element={<DoctorPage />} />
               <Route path="/manage-appointments" element={<ManageAppointments />} />
+              <Route path="/doctors" element={<Doctors />} />
+
 
             </Routes>
           </div>

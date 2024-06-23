@@ -1,3 +1,4 @@
+// src/AuthContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axiosInstance from './services/api';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await axiosInstance.post('/auth/login', userData);
       setCurrentUser(response.data);
-      localStorage.setItem('token', response.data.token); // Save token to localStorage
+      localStorage.setItem('token', response.data.token); // Store token in localStorage
       return response.data;
     } catch (error) {
       console.error('Login error:', error);
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setCurrentUser(null);
-    localStorage.removeItem('token'); // Remove token from localStorage
+    localStorage.removeItem('token'); // Remove token on logout
     navigate('/login');
   };
 
