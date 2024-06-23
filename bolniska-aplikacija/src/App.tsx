@@ -10,6 +10,7 @@ import { AuthProvider } from './AuthContext';
 import Footer from './components/Footer';
 import ManageAppointments from './pages/ManageAppointments';
 import Doctors from './pages/Doctors';
+import BookAppointment from './pages/BookAppointment';
 import './App.css';
 
 const App: React.FC = () => {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
               <Route path="/doctor" element={<DoctorPage />} />
               <Route path="/manage-appointments" element={<ManageAppointments />} />
               <Route path="/doctors" element={<Doctors />} />
+              <Route path="/book-appointment" element={<BookAppointment />} />
 
 
             </Routes>

@@ -37,7 +37,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/zdravniki/**").permitAll()
                         .requestMatchers("/api/pacienti/**").permitAll()
                         .requestMatchers("/api/termin/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/zdravnik/**").permitAll()
+                        .anyRequest().permitAll() // Allow all requests without authentication
                 )
                 .httpBasic(withDefaults());
         return http.build();

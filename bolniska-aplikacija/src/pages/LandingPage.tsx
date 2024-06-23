@@ -1,11 +1,20 @@
 // src/pages/LandingPage.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import './LandingPage.css';
 
 const LandingPage: React.FC = () => {
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleBookAppointment = () => {
+    if (currentUser) {
+      navigate('/book-appointment');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="landing-page">
@@ -29,11 +38,11 @@ const LandingPage: React.FC = () => {
       <main>
         <div className="main-content">
           <div className="text-content">
-            <h1>Find your Doctor and make an Appointments</h1>
+            <h1>Find your Doctor and make an Appointment</h1>
             <p>
               Talk to online doctors and get medical advice, online prescriptions, refills and medical notes within minutes. On-demand healthcare services at your fingertips.
             </p>
-            <button className="book-appointment">Book Appointment</button>
+            <button className="book-appointment" onClick={handleBookAppointment}>Book Appointment</button>
           </div>
           <div className="image-content">
             <img src="../slika1.jpg" alt="Healthcare" />

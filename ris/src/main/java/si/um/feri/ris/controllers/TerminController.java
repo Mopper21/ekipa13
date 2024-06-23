@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.ris.models.Termin;
-import si.um.feri.ris.models.Zdravnik;
 import si.um.feri.ris.repositories.TerminRepository;
+import si.um.feri.ris.models.Zdravnik;
 import si.um.feri.ris.repositories.ZdravnikRepository;
 
 import java.util.List;
@@ -31,6 +31,14 @@ public class TerminController {
         Optional<Termin> termin = terminRepository.findById(id);
         return termin.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/zdravniki/{id}/termin")
+    public ResponseEntity<List<Termin>> getTerminiByZdravnikId(@PathVariable Long id) {
+        List<Termin> termini = terminRepository.findByZdravnikId(id);
+        return ResponseEntity.ok(termini);
+    }
+
+
 
     @PostMapping
     public ResponseEntity<Termin> createTermin(@RequestBody Termin termin) {

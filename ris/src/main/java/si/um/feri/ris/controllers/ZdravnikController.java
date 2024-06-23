@@ -3,7 +3,9 @@ package si.um.feri.ris.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import si.um.feri.ris.models.Termin;
 import si.um.feri.ris.models.Zdravnik;
+import si.um.feri.ris.repositories.TerminRepository;
 import si.um.feri.ris.repositories.ZdravnikRepository;
 
 import java.util.List;
@@ -57,5 +59,14 @@ public class ZdravnikController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Autowired
+    private TerminRepository terminRepository;
+
+    @GetMapping("/{id}/termin")
+    public ResponseEntity<List<Termin>> getZdravnikTermini(@PathVariable Long id) {
+        List<Termin> termini = terminRepository.findByZdravnikId(id);
+        return ResponseEntity.ok(termini);
     }
 }
