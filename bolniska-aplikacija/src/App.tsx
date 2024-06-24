@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import ManageAppointments from './pages/ManageAppointments';
 import Doctors from './pages/Doctors';
 import BookAppointment from './pages/BookAppointment';
+import About from './pages/About';
 import './App.css';
 
 const App: React.FC = () => {
@@ -28,7 +29,7 @@ const App: React.FC = () => {
               <Route path="/manage-appointments" element={<ManageAppointments />} />
               <Route path="/doctors" element={<Doctors />} />
               <Route path="/book-appointment" element={<BookAppointment />} />
-
+              <Route path="/about" element={<About />} />
 
             </Routes>
           </div>
