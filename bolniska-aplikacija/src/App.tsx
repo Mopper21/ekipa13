@@ -12,6 +12,7 @@ import ManageAppointments from './pages/ManageAppointments';
 import Doctors from './pages/Doctors';
 import BookAppointment from './pages/BookAppointment';
 import About from './pages/About';
+import Services from './pages/Services';
 import './App.css';
 
 const App: React.FC = () => {
@@ -30,7 +31,7 @@ const App: React.FC = () => {
               <Route path="/doctors" element={<Doctors />} />
               <Route path="/book-appointment" element={<BookAppointment />} />
               <Route path="/about" element={<About />} />
-
+              <Route path="/services" element={<Services />} />
             </Routes>
           </div>
           <Footer />
