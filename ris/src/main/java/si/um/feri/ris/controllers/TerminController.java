@@ -1,6 +1,8 @@
 package si.um.feri.ris.controllers;
 
 import com.itextpdf.text.DocumentException;
+import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,12 +49,26 @@ public class TerminController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+//    @GetMapping("/zdravniki/{id}/termin")
+//    public ResponseEntity<List<TerminDTO>> getTerminiByZdravnikId(@PathVariable Long id) {
+//        List<Termin> termini = terminRepository.findByZdravnikId(id);
+//        List<TerminDTO> terminDTOs = termini.stream().map(this::convertToDto).collect(Collectors.toList());
+//        return ResponseEntity.ok(terminDTOs);
+//    }
+
     @GetMapping("/zdravniki/{id}/termin")
-    public ResponseEntity<List<TerminDTO>> getTerminiByZdravnikId(@PathVariable Long id) {
-        List<Termin> termini = terminRepository.findByZdravnikId(id);
+    public ResponseEntity<List<TerminDTO>> getTerminiByZdravnikId(@PathVariable Long id, @RequestParam(required = false) String status) {
+        List<Termin> termini;
+        if (status != null && !status.isEmpty()) {
+            termini = terminRepository.findByZdravnikIdAndStatus(id, status);
+        } else {
+            termini = terminRepository.findByZdravnikId(id);
+        }
         List<TerminDTO> terminDTOs = termini.stream().map(this::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok(terminDTOs);
     }
+
+
 
     private TerminDTO convertToDto(Termin termin) {
         TerminDTO dto = new TerminDTO();
@@ -143,13 +159,37 @@ public class TerminController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTermin(@PathVariable Long id) {
-        if (terminRepository.existsById(id)) {
+    @DeleteMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelTermin(@PathVariable Long id) {
+        System.out.println("Received request to cancel termin with ID: " + id);
+
+        Optional<Termin> terminOptional = terminRepository.findById(id);
+        if (terminOptional.isPresent()) {
+            Termin termin = terminOptional.get();
+            Pacient pacient = termin.getPacient();
+
             terminRepository.deleteById(id);
+            System.out.println("Termin with ID " + id + " has been deleted.");
+
+            // Send cancellation email to the patient
+            try {
+                emailSender.sendEmail(
+                        pacient.getEmail(),
+                        "Appointment Cancellation",
+                        "Dear " + pacient.getIme() + ",\n\nYour appointment scheduled for " + termin.getDatum().toString() + " has been cancelled."
+                );
+                System.out.println("Cancellation email sent to " + pacient.getEmail());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                System.out.println("Failed to send cancellation email.");
+            }
+
             return ResponseEntity.noContent().build();
         } else {
+            System.out.println("Termin with ID " + id + " not found.");
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }

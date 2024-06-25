@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface TerminRepository extends JpaRepository<Termin, Long> {
     List<Termin> findByZdravnikId(Long zdravnikId);
-
+    List<Termin> findByZdravnikIdAndStatus(Long zdravnikId, String status);
+    List<Termin> findByStatus(String status);
 }

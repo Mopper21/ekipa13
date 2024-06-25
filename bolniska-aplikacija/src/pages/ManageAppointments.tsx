@@ -4,6 +4,14 @@ import { useAuth } from '../AuthContext';
 import axiosInstance from '../services/api';
 import './ManageAppointments.css';
 
+interface Appointment {
+  id: number;
+  datum: string;
+  status: string;
+  pacientIme?: string;
+  pacientPriimek?: string;
+}
+
 const ManageAppointments: React.FC = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -11,12 +19,26 @@ const ManageAppointments: React.FC = () => {
     datum: '',
     status: 'Available'
   });
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!currentUser) {
       navigate('/login');
+    } else {
+      fetchBookedAppointments();
     }
   }, [currentUser, navigate]);
+
+  const fetchBookedAppointments = async () => {
+    try {
+      const response = await axiosInstance.get(`/termin/zdravniki/${currentUser.id}/termin?status=Booked`);
+      setAppointments(response.data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      setError('Failed to fetch appointments. Please try again.');
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setAppointment({
@@ -35,13 +57,25 @@ const ManageAppointments: React.FC = () => {
     try {
       const response = await axiosInstance.post('/termin', {
         ...appointment,
-        zdravnik: { id: currentUser.id } 
+        zdravnik: { id: currentUser.id }
       });
-      console.log('Response:', response); 
+      console.log('Response:', response);
       alert('Appointment slot saved successfully');
+      fetchBookedAppointments(); // Refresh the list after adding
     } catch (error) {
       console.error('There was an error saving the appointment slot!', error);
       alert('Failed to save the appointment slot. Please try again.');
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axiosInstance.delete(`/termin/${id}/cancel`);
+      alert('Appointment cancelled successfully');
+      fetchBookedAppointments(); // Refresh the list after deletion
+    } catch (error) {
+      console.error('There was an error cancelling the appointment!', error);
+      alert('Failed to cancel the appointment. Please try again.');
     }
   };
 
@@ -57,6 +91,18 @@ const ManageAppointments: React.FC = () => {
         />
         <button type="submit">Save Appointment Slot</button>
       </form>
+      <h3>Existing Appointments</h3>
+      {error && <div className="error-message">{error}</div>}
+      <div className="appointments-list">
+        {appointments.map((appointment) => (
+          <div key={appointment.id} className="appointment-card">
+            <h4>{new Date(appointment.datum).toLocaleString()}</h4>
+            <p>Patient: {appointment.pacientIme} {appointment.pacientPriimek}</p>
+            <p>Status: {appointment.status}</p>
+            <button onClick={() => handleDelete(appointment.id)}>Cancel Appointment</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
