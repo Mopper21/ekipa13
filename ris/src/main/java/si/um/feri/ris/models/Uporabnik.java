@@ -1,5 +1,6 @@
 package si.um.feri.ris.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,9 +16,11 @@ public class Uporabnik {
     private String token;
 
     @OneToOne(mappedBy = "uporabnik")
+    @JsonManagedReference
     private Zdravnik zdravnik;
 
     @OneToOne(mappedBy = "uporabnik")
+    @JsonManagedReference
     private Pacient pacient;
 
     // Getters and Setters

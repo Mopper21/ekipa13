@@ -1,4 +1,3 @@
-// src/pages/Doctors.tsx
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../services/api';
 import './Doctors.css';
@@ -20,7 +19,15 @@ const Doctors: React.FC = () => {
     const fetchDoctors = async () => {
       try {
         const response = await axiosInstance.get('/zdravniki');
-        setZdravniki(response.data);
+        console.log('Response data:', response.data);  // Dodaj log za odgovor
+        const data = response.data;
+
+        // Provera da li je data niz
+        if (Array.isArray(data)) {
+          setZdravniki(data);
+        } else {
+          setError('Invalid data format received. Expected an array.');
+        }
       } catch (error) {
         console.error('Error fetching doctors:', error);
         setError('Failed to fetch doctors. Please try again.');

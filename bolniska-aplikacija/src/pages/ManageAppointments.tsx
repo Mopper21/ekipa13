@@ -33,10 +33,11 @@ const ManageAppointments: React.FC = () => {
     }
 
     try {
-      await axiosInstance.post('/termin', {
+      const response = await axiosInstance.post('/termin', {
         ...appointment,
-        zdravnik: { id: currentUser.id } // Ensure this matches your backend field
+        zdravnik: { id: currentUser.id } 
       });
+      console.log('Response:', response); 
       alert('Appointment slot saved successfully');
     } catch (error) {
       console.error('There was an error saving the appointment slot!', error);

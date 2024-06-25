@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/termin")
@@ -34,36 +35,65 @@ public class TerminController {
     private PdfGenerator pdfGenerator;
 
     @GetMapping
-    public List<Termin> getAllTermini() {
-        return terminRepository.findAll();
+    public List<TerminDTO> getAllTermini() {
+        List<Termin> termini = terminRepository.findAll();
+        return termini.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Termin> getTerminById(@PathVariable Long id) {
+    public ResponseEntity<TerminDTO> getTerminById(@PathVariable Long id) {
         Optional<Termin> termin = terminRepository.findById(id);
-        return termin.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return termin.map(value -> ResponseEntity.ok(convertToDto(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/zdravniki/{id}/termin")
-    public ResponseEntity<List<Termin>> getTerminiByZdravnikId(@PathVariable Long id) {
+    public ResponseEntity<List<TerminDTO>> getTerminiByZdravnikId(@PathVariable Long id) {
         List<Termin> termini = terminRepository.findByZdravnikId(id);
-        return ResponseEntity.ok(termini);
+        List<TerminDTO> terminDTOs = termini.stream().map(this::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok(terminDTOs);
+    }
+
+    private TerminDTO convertToDto(Termin termin) {
+        TerminDTO dto = new TerminDTO();
+        dto.setId(termin.getId());
+        dto.setDatum(termin.getDatum().toString());
+        dto.setStatus(termin.getStatus());
+
+        Zdravnik zdravnik = termin.getZdravnik();
+        if (zdravnik != null) {
+            dto.setZdravnikId(zdravnik.getId());
+            dto.setZdravnikIme(zdravnik.getIme());
+            dto.setZdravnikPriimek(zdravnik.getPriimek());
+        }
+
+        Pacient pacient = termin.getPacient();
+        if (pacient != null) {
+            dto.setPacientId(pacient.getId());
+            dto.setPacientIme(pacient.getIme());
+            dto.setPacientPriimek(pacient.getPriimek());
+        }
+
+        return dto;
     }
 
     @PostMapping
     public ResponseEntity<Termin> createTermin(@RequestBody Termin termin) {
+        System.out.println("Received request to create termin: " + termin);
         Optional<Zdravnik> zdravnik = zdravnikRepository.findById(termin.getZdravnik().getId());
         if (zdravnik.isPresent()) {
             termin.setZdravnik(zdravnik.get());
             Termin savedTermin = terminRepository.save(termin);
+            System.out.println("Termin saved successfully: " + savedTermin);
             return ResponseEntity.ok(savedTermin);
         } else {
+            System.out.println("Zdravnik not found with id: " + termin.getZdravnik().getId());
             return ResponseEntity.status(404).body(null);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Termin> updateTermin(@PathVariable Long id, @RequestBody Termin terminDetails) {
+    public ResponseEntity<TerminDTO> updateTermin(@PathVariable Long id, @RequestBody Termin terminDetails) {
         Optional<Termin> terminOptional = terminRepository.findById(id);
         if (terminOptional.isPresent()) {
             Termin termin = terminOptional.get();
@@ -104,7 +134,7 @@ public class TerminController {
                     throw new RuntimeException(e);
                 }
 
-                return ResponseEntity.ok(termin);
+                return ResponseEntity.ok(convertToDto(termin));
             } else {
                 return ResponseEntity.status(500).body(null); // Pacient not found
             }

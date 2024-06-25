@@ -12,6 +12,13 @@ interface Doctor {
 interface Appointment {
   id: number;
   datum: string;
+  status: string;
+  zdravnikId: number;
+  zdravnikIme: string;
+  zdravnikPriimek: string;
+  pacientId?: number;
+  pacientIme?: string;
+  pacientPriimek?: string;
 }
 
 const BookAppointment: React.FC = () => {
@@ -49,9 +56,17 @@ const BookAppointment: React.FC = () => {
           console.log(`Fetching appointments for doctor ID: ${selectedDoctorId}`);
           const response = await axiosInstance.get(`/termin/zdravniki/${selectedDoctorId}/termin`);
           console.log('Appointments response:', response.data);
-          setAvailableAppointments(response.data);
+
+          // Provera da li je response.data niz
+          if (Array.isArray(response.data)) {
+            setAvailableAppointments(response.data);
+          } else {
+            setAvailableAppointments([]);
+            console.error('Expected an array of appointments, but got:', response.data);
+          }
         } catch (error) {
           console.error('Error fetching appointments:', error);
+          setAvailableAppointments([]); // Resetujemo dostupne termine u slučaju greške
         }
       }
     };
@@ -77,22 +92,21 @@ const BookAppointment: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        // Create the patient
-        const pacientResponse = await axiosInstance.post('/pacienti', pacient);
-        const pacientId = pacientResponse.data.id;
-  
-        // Update the appointment
-        if (selectedAppointmentId !== null) {
-          await axiosInstance.put(`/termin/${selectedAppointmentId}`, { status: 'Booked', pacient: { id: pacientId } });
-          alert('Appointment booked successfully');
-        } else {
-          alert('Please select an appointment slot');
-        }
-      } catch (error) {
-        console.error('Error booking appointment:', error);
-        alert('Failed to book the appointment. Please try again.');
-      }
+      // Create the patient
+      const pacientResponse = await axiosInstance.post('/pacienti', pacient);
+      const pacientId = pacientResponse.data.id;
 
+      // Update the appointment
+      if (selectedAppointmentId !== null) {
+        await axiosInstance.put(`/termin/${selectedAppointmentId}`, { status: 'Booked', pacient: { id: pacientId } });
+        alert('Appointment booked successfully');
+      } else {
+        alert('Please select an appointment slot');
+      }
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      alert('Failed to book the appointment. Please try again.');
+    }
   };
 
   return (
@@ -158,7 +172,7 @@ const BookAppointment: React.FC = () => {
         </select>
         <select onChange={handleAppointmentChange} required>
           <option value="">Select an Appointment Slot</option>
-          {availableAppointments.map(appointment => (
+          {Array.isArray(availableAppointments) && availableAppointments.map(appointment => (
             <option key={appointment.id} value={appointment.id}>
               {new Date(appointment.datum).toLocaleString()}
             </option>

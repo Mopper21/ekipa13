@@ -1,11 +1,18 @@
 // src/pages/DoctorPage.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import './DoctorPage.css';
 
 const DoctorPage: React.FC = () => {
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser || currentUser.vloga !== 'DOCTOR') {
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
 
   return (
     <div className="doctor-page">
@@ -25,11 +32,12 @@ const DoctorPage: React.FC = () => {
       <main>
         <div className="main-content">
           <div className="text-content">
-            <h1>Welcome, Dr. {currentUser.uporabniskoIme}</h1>
+            <h1>Welcome</h1>
             <p>Manage your appointments.</p>
             <button className="manage-appointments">
               <Link to="/manage-appointments">Manage Appointments</Link>
-            </button>          </div>
+            </button>
+          </div>
           <div className="image-content">
             <img src="../slika1.jpg" alt="Healthcare" />
           </div>

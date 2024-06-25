@@ -1,5 +1,6 @@
 package si.um.feri.ris.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Date;
 
@@ -35,6 +36,7 @@ public class Pacient {
 
     @OneToOne
     @JoinColumn(name = "uporabnik_id")
+    @JsonBackReference
     private Uporabnik uporabnik;
 
     // Getters and Setters

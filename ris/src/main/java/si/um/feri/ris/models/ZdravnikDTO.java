@@ -1,42 +1,13 @@
 package si.um.feri.ris.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-
-import java.util.List;
-
-@Entity
-@Table(name = "Zdravnik")
-public class Zdravnik {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ZdravnikDTO {
     private Long id;
-
-    @Column(name = "Ime")
     private String ime;
-
-    @Column(name = "Priimek")
     private String priimek;
-
-    @Column(name = "Specializacija")
     private String specializacija;
-
-    @Column(name = "Telefon")
     private Integer telefon;
-
-    @Column(name = "Email")
     private String email;
 
-    @OneToOne
-    @JoinColumn(name = "uporabnik_id")
-    @JsonBackReference
-    private Uporabnik uporabnik;
-
-
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -83,13 +54,5 @@ public class Zdravnik {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Uporabnik getUporabnik() {
-        return uporabnik;
-    }
-
-    public void setUporabnik(Uporabnik uporabnik) {
-        this.uporabnik = uporabnik;
     }
 }

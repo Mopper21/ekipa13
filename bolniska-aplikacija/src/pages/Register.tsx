@@ -36,10 +36,7 @@ const Register: React.FC = () => {
       <form onSubmit={handleSubmit} className="register-form">
         <input type="text" name="uporabniskoIme" placeholder="Uporabnisko Ime" onChange={handleChange} />
         <input type="password" name="geslo" placeholder="Geslo" onChange={handleChange} />
-        <select className="vloga" name="vloga" onChange={handleChange} value={userData.vloga}>
-          <option value="USER">User</option>
-          <option value="DOCTOR">Doctor</option>
-        </select>
+        
         <button type="submit">Register</button>
       </form>
       <div className="login-link">

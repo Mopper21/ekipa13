@@ -5,11 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.ris.models.Termin;
 import si.um.feri.ris.models.Zdravnik;
+import si.um.feri.ris.models.ZdravnikDTO;
 import si.um.feri.ris.repositories.TerminRepository;
 import si.um.feri.ris.repositories.ZdravnikRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/zdravniki")
@@ -19,14 +21,29 @@ public class ZdravnikController {
     private ZdravnikRepository zdravnikRepository;
 
     @GetMapping
-    public List<Zdravnik> getAllZdravniki() {
-        return zdravnikRepository.findAll();
+    public List<ZdravnikDTO> getAllZdravniki() {
+        List<Zdravnik> zdravniki = zdravnikRepository.findAll();
+        return zdravniki.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private ZdravnikDTO convertToDto(Zdravnik zdravnik) {
+        ZdravnikDTO dto = new ZdravnikDTO();
+        dto.setId(zdravnik.getId());
+        dto.setIme(zdravnik.getIme());
+        dto.setPriimek(zdravnik.getPriimek());
+        dto.setSpecializacija(zdravnik.getSpecializacija());
+        dto.setTelefon(zdravnik.getTelefon());
+        dto.setEmail(zdravnik.getEmail());
+        return dto;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Zdravnik> getZdravnikById(@PathVariable Long id) {
+    public ResponseEntity<ZdravnikDTO> getZdravnikById(@PathVariable Long id) {
         Optional<Zdravnik> zdravnik = zdravnikRepository.findById(id);
-        return zdravnik.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return zdravnik.map(value -> ResponseEntity.ok(convertToDto(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -35,7 +52,7 @@ public class ZdravnikController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Zdravnik> updateZdravnik(@PathVariable Long id, @RequestBody Zdravnik zdravnikDetails) {
+    public ResponseEntity<ZdravnikDTO> updateZdravnik(@PathVariable Long id, @RequestBody Zdravnik zdravnikDetails) {
         Optional<Zdravnik> zdravnik = zdravnikRepository.findById(id);
         if (zdravnik.isPresent()) {
             Zdravnik updatedZdravnik = zdravnik.get();
@@ -45,7 +62,7 @@ public class ZdravnikController {
             updatedZdravnik.setTelefon(zdravnikDetails.getTelefon());
             updatedZdravnik.setEmail(zdravnikDetails.getEmail());
             zdravnikRepository.save(updatedZdravnik);
-            return ResponseEntity.ok(updatedZdravnik);
+            return ResponseEntity.ok(convertToDto(updatedZdravnik));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -68,5 +85,11 @@ public class ZdravnikController {
     public ResponseEntity<List<Termin>> getZdravnikTermini(@PathVariable Long id) {
         List<Termin> termini = terminRepository.findByZdravnikId(id);
         return ResponseEntity.ok(termini);
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAllZdravniki() {
+        zdravnikRepository.deleteAll();
+        return ResponseEntity.noContent().build();
     }
 }
