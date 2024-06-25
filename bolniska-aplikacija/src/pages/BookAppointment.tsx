@@ -77,21 +77,22 @@ const BookAppointment: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Create the patient
-      const pacientResponse = await axiosInstance.post('/pacienti', pacient);
-      const pacientId = pacientResponse.data.id;
-
-      // Update the appointment
-      if (selectedAppointmentId !== null) {
-        await axiosInstance.put(`/termin/${selectedAppointmentId}`, { status: 'Booked', pacientId });
-        alert('Appointment booked successfully');
-      } else {
-        alert('Please select an appointment slot');
+        // Create the patient
+        const pacientResponse = await axiosInstance.post('/pacienti', pacient);
+        const pacientId = pacientResponse.data.id;
+  
+        // Update the appointment
+        if (selectedAppointmentId !== null) {
+          await axiosInstance.put(`/termin/${selectedAppointmentId}`, { status: 'Booked', pacient: { id: pacientId } });
+          alert('Appointment booked successfully');
+        } else {
+          alert('Please select an appointment slot');
+        }
+      } catch (error) {
+        console.error('Error booking appointment:', error);
+        alert('Failed to book the appointment. Please try again.');
       }
-    } catch (error) {
-      console.error('Error booking appointment:', error);
-      alert('Failed to book the appointment. Please try again.');
-    }
+
   };
 
   return (

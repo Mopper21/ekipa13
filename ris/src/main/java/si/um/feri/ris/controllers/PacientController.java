@@ -1,5 +1,7 @@
 package si.um.feri.ris.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/pacienti")
 public class PacientController {
+
+    private static final Logger logger = LoggerFactory.getLogger(PacientController.class);
 
     @Autowired
     private PacientRepository pacientRepository;
@@ -28,8 +32,13 @@ public class PacientController {
     }
 
     @PostMapping
-    public Pacient createPacient(@RequestBody Pacient pacient) {
-        return pacientRepository.save(pacient);
+    public ResponseEntity<Pacient> createPacient(@RequestBody Pacient pacient) {
+        try {
+            Pacient savedPacient = pacientRepository.save(pacient);
+            return ResponseEntity.ok(savedPacient);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @PutMapping("/{id}")

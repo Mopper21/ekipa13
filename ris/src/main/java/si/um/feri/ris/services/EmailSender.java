@@ -1,13 +1,14 @@
 package si.um.feri.ris.services;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.activation.DataSource;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.core.io.ByteArrayResource;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 
 @Service
@@ -23,8 +24,8 @@ public class EmailSender {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text);
-
-        helper.addAttachment(attachmentName, new ByteArrayResource(attachment.toByteArray()));
+        DataSource dataSource = new ByteArrayDataSource(attachment.toByteArray(), "application/pdf");
+        helper.addAttachment(attachmentName, dataSource);
 
         mailSender.send(message);
     }
